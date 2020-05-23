@@ -1,0 +1,3 @@
+[submodule "SPI-Py/MFRC522-python"]
+	path = SPI-Py/MFRC522-python
+	url = https://github.com/pimylifeup/MFRC522-python
