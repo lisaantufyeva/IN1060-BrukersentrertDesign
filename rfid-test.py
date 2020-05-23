@@ -23,7 +23,6 @@ workout1 = ["media/intro0101.wav","media/lyd0101.wav", "media/intro0102.wav", "m
 workout2 = ["media/intro0202.wav","media/lyd0202.wav"]
 
 #Setup ID
-
 workout1Id = "440026144656"
 workout2Id = "726646219672"
 
