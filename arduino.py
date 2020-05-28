@@ -1,7 +1,8 @@
 import serial
 import RPi.GPIO as GPIO
 import time
-import simpleaudio as sa
+import pygame
+
 
 #Spilleliste Workout 1
 workout1nivaa1 = ["media/intro0101.wav","media/lyd0101.wav"]
@@ -18,10 +19,19 @@ workout2nivaa3 = ["media/lyd0102.wav"]
 ser = serial.Serial("/dev/ttyACM1", 115200, timeout=1)
 ser.baudrate = 115200
 
+NEXT = pygame.USEREVENT+1
+currentplaylist = []
+currenttrack = 0
+
 def main():
 
+    pygame.init()
+    pygame.mixer.init(frequency = 48000)
+
     while True:
+        print("loop")
         read_ser = ser.readline()
+        handlePygameEvents()
 
         message = read_ser.decode("ASCII")
         if message != "":
@@ -41,27 +51,42 @@ def commandfraArduino(commando, workout, level):
 
 
 def playWorkout(commando, workout, level):
+    global currentplaylist
+    global currenttrack
     if (commando == "PLAY"):
         if (workout == "1"):
             if (level == "1"):
-                spillWorkout(workout1nivaa1)
+                currentplaylist = workout1nivaa1
             if (level == "2"):
-                spillWorkout(workout1nivaa2)
+                currentplaylist = workout1nivaa2
             if (level == "3"):
-                spillWorkout(workout1nivaa2)
+                currentplaylist = workout1nivaa3
+            currenttrack = 0
+            spillWorkout()
 
-def spillWorkout(lst):
-    for m in lst:
-        spillAvLyd(m)
+def spillWorkout():
+    if len(currentplaylist) > 0 and  currenttrack < len(currentplaylist):
+        pygame.mixer.music.load(currentplaylist[currenttrack])
+        pygame.mixer.music.play()
+        if playlistNotEmpty():
+            pygame.mixer.music.set_endevent(NEXT)
 
-def spillAvLyd(filnavn: str):
-    wave_obj = sa.WaveObject.from_wave_file(filnavn)
-    play_obj = wave_obj.play()
-    #play_obj.wait_done() # denne blokkerer..
+
+def playlistNotEmpty():
+    return currenttrack < len(currentplaylist)-1
+
+def handlePygameEvents():
+    global currenttrack
+    for event in pygame.event.get():
+        if event.type == NEXT:
+            print("Pygame event: NEXT")
+            currenttrack = (currenttrack + 1)
+            spillWorkout()
+
 
 
 def stopLyd():
-    play_obj.stop()
+    return
 
 
 main()
