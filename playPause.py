@@ -5,11 +5,12 @@ import pygame
 NEXT = pygame.USEREVENT+1
 
 
-currenttrack = 0
+
 
 workout1nivaa1 = ["/share/skolearbeid/media/intro0101.mp3","/share/skolearbeid/media/lyd0101.mp3"]
 
 #paused = False
+currenttrack = 0
 
 
 
@@ -24,8 +25,6 @@ def playWorkout(lst, currenttrack):
 #initialize mixer to play music
     pygame.init()
     pygame.mixer.init(frequency = 48000)
-
-
 
     antall_filer = len(lst)
 
@@ -60,8 +59,31 @@ def playWorkout(lst, currenttrack):
                     paused = False
                     pygame.mixer.music.unpause()
 
+            inp = input("< to play prev")
+            if (inp == "<"):
+                pygame.mixer.music.rewind()
+            """
+            inp = input("> to play next")
+            if (inp == ">"):
+                playNext()
+            """
+
+
 
 pygame.quit()
+
+def playPrev():
+    print("play previous")
+    pygame.mixer.music.rewind()
+
+def playNext(l, s):
+    neste = s+1
+    pygame.mixer.music.load(l[neste])
+    pygame.mixer.music.play()
+    print("play next")
+
+
+
 
 def pause():
     if pygame.mixer.music.get_busy():
