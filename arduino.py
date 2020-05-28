@@ -43,11 +43,15 @@ def main():
             workout = parts[1]
             level = parts[2]
 
-            playWorkout(commando, workout, level)
+            commandfraArduino(commando, workout, level)
+
+            #playWorkout(commando, workout, level)
 
 def commandfraArduino(commando, workout, level):
     if (commando == "PLAY"):
-        playWorkout(commando, workout, level);
+        playWorkout(commando, workout, level)
+    if (commando == "PAUSE"):
+        pauseWorkout()
 
 
 def playWorkout(commando, workout, level):
@@ -55,6 +59,14 @@ def playWorkout(commando, workout, level):
     global currenttrack
     if (commando == "PLAY"):
         if (workout == "1"):
+            if (level == "1"):
+                currentplaylist = workout1nivaa1
+            if (level == "2"):
+                currentplaylist = workout1nivaa2
+            if (level == "3"):
+                currentplaylist = workout1nivaa3
+            currenttrack = 0
+        if (workout == "2"):
             if (level == "1"):
                 currentplaylist = workout1nivaa1
             if (level == "2"):
@@ -84,6 +96,9 @@ def handlePygameEvents():
             spillWorkout()
 
 
+def pauseWorkout():
+    if pygame.mixer.music.get_busy():
+        pygame.mixer.music.pause()
 
 def stopLyd():
     return
