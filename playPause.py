@@ -9,7 +9,7 @@ currenttrack = 0
 
 workout1nivaa1 = ["/share/skolearbeid/media/intro0101.mp3","/share/skolearbeid/media/lyd0101.mp3"]
 
-paused = False
+#paused = False
 
 
 
@@ -21,6 +21,7 @@ def main():
 
 def playWorkout(lst, currenttrack):
 
+#initialize mixer to play music
     pygame.init()
     pygame.mixer.init(frequency = 48000)
 
@@ -28,18 +29,17 @@ def playWorkout(lst, currenttrack):
 
     antall_filer = len(lst)
 
+#play first track
     pygame.mixer.music.load(lst[currenttrack])
     pygame.mixer.music.play()
+
     pygame.mixer.music.set_endevent(NEXT)
-
-
-
+    paused = False
     running = True
-
-
-    while running:
-
+    while (running and not paused):
         for event in pygame.event.get():
+
+            print ("Play: ", lst[currenttrack])
             if event.type == pygame.QUIT:
                 running = False
 
@@ -50,22 +50,15 @@ def playWorkout(lst, currenttrack):
                 pygame.mixer.music.load(lst[currenttrack])
                 pygame.mixer.music.play()
 
+            inp = input("p ?")
+            if (inp == "p"):
+                pause()
 
-
-        inp = input("pause ?")
-        if (inp == "p"):
-            pause();
-
-
-            paused = True
-            inp = input("resume? ")
-            if (inp =="p"):
-                paused = False
-                pygame.mixer.music.unpause()
-
-
-
-
+                paused = True
+                inp = input("resume? ")
+                if (inp =="p"):
+                    paused = False
+                    pygame.mixer.music.unpause()
 
 
 pygame.quit()
