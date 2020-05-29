@@ -5,7 +5,7 @@ import pygame
 
 
 #Spilleliste Workout 1
-workout1nivaa1 = ["media/intro0101.wav","media/lyd0101.wav"]
+workout1nivaa1 = ["media/intro0101.wav","media/intro0202.wav"]
 workout1nivaa2 = ["media/intro0202.wav","media/lyd0202.wav"]
 workout1nivaa3 = ["media/intro0103.wav","media/lyd0103.wav"]
 
@@ -54,6 +54,10 @@ def commandfraArduino(commando, workout, level):
         pause()
     if (commando == "RESUME"):
         resume()
+    if (commando == "NEXT"):
+        playNext()
+    if (commando == "PREV"):
+        playPrev()
 
 
 
@@ -95,6 +99,8 @@ def spillWorkout():
 def playlistNotEmpty():
     return currenttrack < len(currentplaylist)-1
 
+def notFirstTrack():
+    return len(currentplaylist) - currenttrack <= len(currentplaylist)
 def handlePygameEvents():
     global currenttrack
     for event in pygame.event.get():
@@ -103,6 +109,17 @@ def handlePygameEvents():
             currenttrack = (currenttrack + 1)
             spillWorkout()
 
+def playNext():
+    global currenttrack
+    if playlistNotEmpty():
+        currenttrack = (currenttrack + 1)
+        spillWorkout()
+
+def playPrev():
+    global currenttrack
+    if notFirstTrack():
+        currenttrack = (currenttrack - 1)
+        spillWorkout()
 
 def pause():
     #if pygame.mixer.music.get_busy():
