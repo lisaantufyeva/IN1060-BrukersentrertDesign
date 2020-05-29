@@ -16,7 +16,7 @@ workout2nivaa2 = ["media/lyd0102.wav"]
 workout2nivaa3 = ["media/lyd0102.wav"]
 
 
-ser = serial.Serial("/dev/ttyACM1", 115200, timeout=1)
+ser = serial.Serial("/dev/ttyACM0", 115200, timeout=1)
 ser.baudrate = 115200
 
 NEXT = pygame.USEREVENT+1
@@ -51,30 +51,38 @@ def commandfraArduino(commando, workout, level):
     if (commando == "PLAY"):
         playWorkout(commando, workout, level)
     if (commando == "PAUSE"):
-        pauseWorkout()
+        pause()
+    if (commando == "RESUME"):
+        resume()
+
+
+
 
 
 def playWorkout(commando, workout, level):
     global currentplaylist
     global currenttrack
-    if (commando == "PLAY"):
-        if (workout == "1"):
-            if (level == "1"):
-                currentplaylist = workout1nivaa1
-            if (level == "2"):
-                currentplaylist = workout1nivaa2
-            if (level == "3"):
-                currentplaylist = workout1nivaa3
-            currenttrack = 0
-        if (workout == "2"):
-            if (level == "1"):
-                currentplaylist = workout1nivaa1
-            if (level == "2"):
-                currentplaylist = workout1nivaa2
-            if (level == "3"):
-                currentplaylist = workout1nivaa3
-            currenttrack = 0
-            spillWorkout()
+
+    if (workout == "1"):
+        if (level == "1"):
+            currentplaylist = workout1nivaa1
+        if (level == "2"):
+            currentplaylist = workout1nivaa2
+        if (level == "3"):
+            currentplaylist = workout1nivaa3
+
+    if (workout == "2"):
+        if (level == "1"):
+            currentplaylist = workout1nivaa1
+        if (level == "2"):
+            currentplaylist = workout1nivaa2
+        if (level == "3"):
+            currentplaylist = workout1nivaa3
+
+    currenttrack = 0
+    spillWorkout()
+
+
 
 def spillWorkout():
     if len(currentplaylist) > 0 and  currenttrack < len(currentplaylist):
@@ -96,9 +104,13 @@ def handlePygameEvents():
             spillWorkout()
 
 
-def pauseWorkout():
-    if pygame.mixer.music.get_busy():
+def pause():
+    #if pygame.mixer.music.get_busy():
         pygame.mixer.music.pause()
+        print("paused")
+def resume():
+    pygame.mixer.music.unpause()
+    print("resume")
 
 def stopLyd():
     return
