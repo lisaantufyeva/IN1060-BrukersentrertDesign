@@ -2,14 +2,14 @@
 #include <MFRC522.h>
 
 #include <SoftwareSerial.h>
-#include <DFMiniMp3.h>
+
 
 SoftwareSerial mySerial(2, 3);
 
-#define RST_PIN 9 // Configurable, see typical pin layout above
-#define SS_PIN 10 // Configurable, see typical pin layout above
+#define RST_PIN 9 // 
+#define SS_PIN 10 // 
 
-/* RFID/NFC */
+/* RFID leser */
 MFRC522 rfid(SS_PIN, RST_PIN); // Create MFRC522 instance
 
 /*KNAPPER*/
@@ -31,6 +31,7 @@ uint8_t kortSkannet;
 void setup()
 {
 
+//knapper
   pinMode(nivaa1, INPUT);
   digitalWrite(nivaa1, HIGH);
   pinMode(nivaa2, INPUT);
@@ -43,41 +44,48 @@ void setup()
   digitalWrite(prevKnapp, HIGH);
   pinMode(nextKnapp, INPUT);
   digitalWrite(nextKnapp, HIGH);
-  /*RFID/NFC*/
+  
   Serial.begin(115200);
-
+  //initialiserer SPI bus
   SPI.begin();
+  //initialiserer RFID leser
   rfid.PCD_Init();
-  //Serial.println(F("Les kort: "));
-  //Serial.println();
+
 }
 
 void loop()
 {
-  //Serial.println("loop");
-  int wid = sjekkWorkoutNr();
-  int niva = velgNivaa();
-  int pausePlay = pauseWorkout(); // 
+  /* LESER KNAPPER*/
+
+  int wid = findWorkout();
+  int niva = chooseLevel();
+  int pausePlay = pauseWorkout(); 
   int prev = playPrev();
   int next = playNext();
   String msg;
-
+  //Hvis kortet er lest og nivåknappen trykket send beskjed til Raspberry Pi om å spille av spillelisten
   if (wid != 0 && niva != 0)
   {
     msg = playMessageToPi(wid, niva);
     Serial.println(msg);
   }
+  //Hvis kortet er lest og nesteKnapp trykket send beskjed til Raspberry Pi om å spille av neste fil i spillelisten
+
   if (wid !=0 && next != 0)
   {
     msg = nextMessageToPi(next);
     Serial.println(msg);
   }
+      
+  //Hvis kortet er lest og prevKnapp trykket send beskjed til Raspberry Pi om å spille av forrige fil i spillelisten
+
   if (wid != 0 && prev != 0)
   {
     msg = prevMessageToPi(prev);
     Serial.println(msg);
   }
-
+  //Hvis kortet er lest og pauseKnapp trykket send beskjed til Raspberry Pi om å pause avspilling
+  
   if (wid != 0 && pausePlay != 0)
   {
  
@@ -86,6 +94,7 @@ void loop()
     Serial.println(msg);
     
   }
+  // Venter på at pauseknappen trykkes igjen for å spille lyden videre 
     while(paused)
     {
       int buttonState;
@@ -103,13 +112,8 @@ void loop()
 
 }
 
-String resumeMessageToPi(int pausePlay)
-{
-  String resumeMld = "RESUME ";
-  resumeMld += "0 ";
-  resumeMld += String(pausePlay);
-  return(resumeMld);
-}
+// Returnerer en melding som sendes til Pi for å spille av spillelisten(workout) på riktig nivå
+
 
 String playMessageToPi(int wNr, int niva)
 {
@@ -119,6 +123,8 @@ String playMessageToPi(int wNr, int niva)
   playMld += String(niva);
   return(playMld);
 }
+// Returnerer en melding som sendes til Pi for å pause avspilling
+
 
 String pauseMessageToPi(int pausePlay)
 {
@@ -127,7 +133,15 @@ String pauseMessageToPi(int pausePlay)
   pauseMld += String(pausePlay);
   return(pauseMld);
 }
-
+// Returnerer en melding som sendes til Pi for å fortsette avspilling
+String resumeMessageToPi(int pausePlay)
+{
+  String resumeMld = "RESUME ";
+  resumeMld += "0 ";
+  resumeMld += String(pausePlay);
+  return(resumeMld);
+}
+//Returnerer en melding som sendes til Pi for å spille av forrige lydfil
 String prevMessageToPi(int prev)
 {
   String prevMld= "PREV ";
@@ -135,7 +149,7 @@ String prevMessageToPi(int prev)
   prevMld += String(prev);
   return(prevMld);
 }
-
+//Returnerer en melding som sendes til Pi for å spille av neste lydfil
 String nextMessageToPi(int next)
 {
   String nextMld= "NEXT ";
@@ -154,7 +168,6 @@ int pauseWorkout()
 
   if (buttonState == LOW)
   {
-    //Serial.println("Pause button")
     delay(debounceDelay);
 
     return 1;
@@ -171,7 +184,6 @@ int playNext()
 
   if (buttonState == LOW)
   {
-    //Serial.println("Play next");
     delay(debounceDelay);
 
     return 1;
@@ -188,7 +200,6 @@ int playPrev()
 
   if (buttonState == LOW)
   {
-    //Serial.println("Play previous");
     delay(debounceDelay);
 
     return 1;
@@ -198,7 +209,7 @@ int playPrev()
 
 /*IDENTIFISERER WORKOUT*/
 
-int sjekkWorkoutNr()
+int findWorkout()
 {
 
   int newRead = readCard();
@@ -206,6 +217,7 @@ int sjekkWorkoutNr()
   if (newRead == 1)
   {
     String content = "";
+    // lagrer kort ID inn i liste og konverterer det til en String
 
     for (byte i = 0; i < rfid.uid.size; i++)
     {
@@ -215,8 +227,7 @@ int sjekkWorkoutNr()
 
     content.toUpperCase();
 
-    //change here the UID of the card/cards that you want to give access
-    if (content.substring(1) == "66 73 9A 1F")
+    if (content.substring(1) == "66 73 9A 1F") 
     {
       return 1;
     }
@@ -245,13 +256,13 @@ int8_t readCard()
     rfid.PICC_HaltA(); // Stop reading
     return 1;
   }
-  rfid.PICC_HaltA(); // Stop reading
+  rfid.PICC_HaltA(); 
   return 0;
 }
 
-/*SJEKKER HVILKEN NIVÅ-KNAPP */
+/* Returnerer hvilken nivå-knapp har blitt trykket på */
 
-int velgNivaa()
+int chooseLevel()
 {
   int buttonState;
 
