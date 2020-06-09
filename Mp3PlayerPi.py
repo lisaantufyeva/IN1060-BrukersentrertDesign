@@ -5,15 +5,15 @@ import pygame
 
 
 #Spilleliste Workout 1
-workout1nivaa1 = ["media/intro0101.wav","media/intro0202.wav"]
-workout1nivaa2 = ["media/intro0202.wav","media/lyd0202.wav"]
-workout1nivaa3 = ["media/intro0103.wav","media/lyd0103.wav"]
+workout1nivaa1 = ["lydfiler/211Rygghev.mp3","lydfiler/212Rygghev.mp3","lydfiler/221Baten.mp3", "lydfiler/222Baten.mp3", "lydfiler/231Utfall.mp3", "lydfiler/232Utfall.mp3", "lydfiler/241Planken.mp3", "lydfiler/242Planken.mp3", "lydfiler/251Sideplanke.mp3", "lydfiler/252Sideplanke.mp3", "lydfiler/253Sideplanke2.mp3", "lydfiler/261Kneboy.mp3", "lydfiler/262Kneboy.mp3", "lydfiler/271Benhev.mp3", "lydfiler/272Benhev.mp3", "lydfiler/281Pushups.mp3", "lydfiler/282Pushups.mp3" ]
+workout1nivaa2 = ["lydfiler/111pushups.mp3","lydfiler/112pushups.mp3", "lydfiler/121Kneboy.mp3", "lydfiler/122Kneboy.mp3", "lydfiler/131Planken.mp3", "lydfiler/132Planken.mp3", "lydfiler/141Supermann.mp3", "lydfiler/142Supermann.mp3", "lydfiler/151Benhev.mp3", "lydfiler/152Benhev.mp3", "lydfiler/161Russian twist.mp3", "lydfiler/162Russian twist.mp3", "lydfiler/171Utfall.mp3", "lydfiler/172Utfall.mp3", "lydfiler/181kne.mp3", "lydfiler/182kne.mp3", "lydfiler/191Sideplanke.mp3", "lydfiler/192Sideplanke.mp3", "lydfiler/1101Sideplanke.mp3", "lydfiler/1102Sideplanke.mp3", "lydfiler/1111baten.mp3", "lydfiler/1112baten.mp3"]
+
 
 
 # Spilleliste Workout 2
-workout2nivaa1 = ["media/intro0101.wav","media/lyd0101.wav"]
-workout2nivaa2 = ["media/lyd0102.wav"]
-workout2nivaa3 = ["media/lyd0102.wav"]
+workout2nivaa1 = ["lydfiler/111pushups.mp3","lydfiler/112pushups.mp3", "lydfiler/121Kneboy.mp3", "lydfiler/122Kneboy.mp3", "lydfiler/131Planken.mp3", "lydfiler/132Planken.mp3", "lydfiler/141Supermann.mp3", "lydfiler/142Supermann.mp3", "lydfiler/151Benhev.mp3", "lydfiler/152Benhev.mp3", "lydfiler/161Russian twist.mp3", "lydfiler/162Russian twist.mp3", "lydfiler/171Utfall.mp3", "lydfiler/172Utfall.mp3", "lydfiler/181kne.mp3", "lydfiler/182kne.mp3", "lydfiler/191Sideplanke.mp3", "lydfiler/192Sideplanke.mp3", "lydfiler/1101Sideplanke.mp3", "lydfiler/1102Sideplanke.mp3", "lydfiler/1111baten.mp3", "lydfiler/1112baten.mp3"]
+workout2nivaa2 = ["lydfiler/211Rygghev.mp3","lydfiler/212Rygghev.mp3","lydfiler/221Baten.mp3", "lydfiler/222Baten.mp3", "lydfiler/231Utfall.mp3", "lydfiler/232Utfall.mp3", "lydfiler/241Planken.mp3", "lydfiler/242Planken.mp3", "lydfiler/251Sideplanke.mp3", "lydfiler/252Sideplanke.mp3", "lydfiler/253Sideplanke2.mp3", "lydfiler/261Kneboy.mp3", "lydfiler/262Kneboy.mp3", "lydfiler/271Benhev.mp3", "lydfiler/272Benhev.mp3", "lydfiler/281Pushups.mp3", "lydfiler/282Pushups.mp3" ]
+workout2nivaa3 = []
 
 
 ser = serial.Serial("/dev/ttyACM0", 115200, timeout=1)
@@ -77,11 +77,11 @@ def playWorkout(commando, workout, level):
 
     if (workout == "2"):
         if (level == "1"):
-            currentplaylist = workout1nivaa1
+            currentplaylist = workout2nivaa1
         if (level == "2"):
-            currentplaylist = workout1nivaa2
+            currentplaylist = workou21nivaa2
         if (level == "3"):
-            currentplaylist = workout1nivaa3
+            currentplaylist = workou21nivaa3
 
     currenttrack = 0
     spillWorkout()
