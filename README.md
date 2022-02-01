@@ -8,4 +8,6 @@ Hjemmetrening PT er laget med Arduino Uno som hovedkomponent som kontrollerer ko
 Prosjektbeskrivelse: https://www.uio.no/studier/emner/matnat/ifi/IN1060/v20/prosjekter-20/interlinked/
 
 Link til promovideo: ​https://vimeo.com/426578205
+
+Tegning av kretsen:
 ![PT hjemmetrening_bb](https://user-images.githubusercontent.com/65827422/151951096-6fbc04ce-5131-466e-bda0-ed5ca51d9e17.png)
